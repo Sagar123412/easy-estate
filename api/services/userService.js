@@ -153,3 +153,17 @@ export const deleteUserByID = async (id) => {
   return deletedUser;
 };
 
+//update user by Id 
+export const updateUserByID = async (id, name, role) => {
+  try {
+    const updatedUser = await userModel.findByIdAndUpdate(
+      id,
+      { name, role },
+      { new: true, select: "-password" }
+    );
+    return updatedUser;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Internal Server Error");
+  }
+};

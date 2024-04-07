@@ -5,6 +5,7 @@ import {
   signUpUser,
   getUserByID as getUserByIDService,
   deleteUserByID as deleteUserByIDService,
+  updateUserByID as updateUserByIDService
 } from "../services/userservice.js";
 
 export async function signUp(req, res) {
@@ -116,3 +117,30 @@ export const deleteUserByID = async (req, res) => {
   }
 };
 
+export const updateUserByID = async (req, res) => {
+  const { id } = req.params;
+  const { name, role } = req.body;
+  
+  try {
+    const updatedUser = await updateUserByIDService(id, name, role);
+    
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: "User updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
