@@ -1,4 +1,11 @@
-import { signInUser, signUpUser } from "../services/userservice.js";
+import {
+  getAllUsers,
+  getCurrentUserById,
+  signInUser,
+  signUpUser,
+  getUserByID as getUserByIDService,
+  deleteUserByID as deleteUserByIDService,
+} from "../services/userservice.js";
 
 export async function signUp(req, res) {
   const { name, email, phone, password, role } = req.body;
@@ -29,3 +36,83 @@ export async function signIn(req, res) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
+
+export const getCurrentUser = async (req, res) => {
+  const { userId } = req; // Assuming userId is extracted from the token
+  try {
+    const user = await getCurrentUserById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const getUsers = async (req, res) => {
+  const userRole = req.userRole;
+  try {
+    const users = await getAllUsers(userRole);
+    return res.json(users);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getUserByID = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await getUserByIDService(id);
+    res.json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const deleteUserByID = async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Check if the user exists
+    const user = await deleteUserByIDService(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Delete the user
+    await deleteUserByIDService(id);
+
+    res.json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+

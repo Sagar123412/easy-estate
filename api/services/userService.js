@@ -66,10 +66,10 @@ export async function signUpUser(name, email, password, phone, role = "user") {
     });
 
     // Generate JWT token with the ID of the newly created user
-    const token = generateAccessToken(newUser._id);
+    const token = generateAccessToken(newUser._id, newUser.role);
 
     // Generate refresh token
-    const refreshToken = generateRefreshToken(newUser._id);
+    const refreshToken = generateRefreshToken(newUser._id, newUser.role);
 
     return {
       success: true,
@@ -105,8 +105,8 @@ export async function signInUser(emailOrPhone, password) {
       };
     }
 
-    const accessToken = generateAccessToken(user._id);
-    const refreshToken = generateRefreshToken(user._id);
+    const accessToken = generateAccessToken(user._id, user.role);
+    const refreshToken = generateRefreshToken(user._id, user.role);
 
     return {
       success: true,
@@ -120,4 +120,36 @@ export async function signInUser(emailOrPhone, password) {
     return { success: false, message: "Internal Server Error" };
   }
 }
+
+//get current user
+export const getCurrentUserById = async (userId) => {
+  try {
+    return await userModel.findById(userId, "-password");
+  } catch (error) {
+    throw new Error("Internal Server Error");
+  }
+};
+
+//get All Users
+export const getAllUsers = async () => {
+  try {
+    return await userModel.find({}, "-password");
+  } catch (error) {
+    throw new Error("Internal Server Error");
+  }
+};
+
+//get user by id
+export const getUserByID = async (id) => {
+  return await userModel.findById(id, "-password");
+};
+
+//delete user by id
+export const deleteUserByID = async (id) => {
+  const deletedUser = await userModel.findByIdAndDelete(id);
+  if (!deletedUser) {
+    return null; // Return null if user is not found
+  }
+  return deletedUser;
+};
 
