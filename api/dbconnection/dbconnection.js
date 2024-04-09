@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 export const dbconnection = () => {
   mongoose
     .connect(`${process.env.MONGO_URI}/E-State_MERN`)

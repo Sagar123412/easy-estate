@@ -6,7 +6,7 @@ import {
   getUserByID as getUserByIDService,
   deleteUserByID as deleteUserByIDService,
   updateUserByID as updateUserByIDService
-} from "../services/userservice.js";
+} from "../services/userService.js";
 
 export async function signUp(req, res) {
   const { name, email, phone, password, role } = req.body;
@@ -120,17 +120,17 @@ export const deleteUserByID = async (req, res) => {
 export const updateUserByID = async (req, res) => {
   const { id } = req.params;
   const { name, role } = req.body;
-  
+
   try {
     const updatedUser = await updateUserByIDService(id, name, role);
-    
+
     if (!updatedUser) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-    
+
     res.json({
       success: true,
       message: "User updated successfully",

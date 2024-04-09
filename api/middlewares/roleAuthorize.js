@@ -1,7 +1,7 @@
 export const roleAuthorize = (role) => {
   return async (req, res, next) => {
     try {
-      const userRole = req.userRole;
+      const userRole = req.body.userRole;
       if (!userRole || userRole !== role) {
         return res.status(403).json({
           success: false,

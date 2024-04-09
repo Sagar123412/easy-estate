@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 // Middleware to verify JWT token
 export const verifyToken = (req, res, next) => {
   const token = req.headers.token;
+  
   if (!token) {
     return res.status(401).json({
       success: false,
