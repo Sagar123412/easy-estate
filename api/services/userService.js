@@ -61,13 +61,13 @@ export async function signUpUser(name, email, password, phone, role = "user") {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user with the hashed password
-      const newUser = await userModel.create({
-        name,
-        email,
-        phone,
-        password: hashedPassword,
-        role,
-      });
+    const newUser = await userModel.create({
+      name,
+      email,
+      phone,
+      password: hashedPassword,
+      role,
+    });
 
     // Generate JWT token with the ID of the newly created user
     const token = generateAccessToken(newUser._id, newUser.role);
