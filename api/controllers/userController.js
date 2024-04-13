@@ -9,9 +9,12 @@ import {
 } from "../services/userService.js";
 
 export async function signUp(req, res) {
+
   const { name, email, phone, password, role } = req.body;
+
   try {
     const result = await signUpUser(name, email, password, phone, role);
+
     if (result.success) {
       res.status(201).json(result);
     } else {

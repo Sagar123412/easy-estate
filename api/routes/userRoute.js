@@ -15,6 +15,7 @@ const router = express.Router();
 
 // User authentication routes
 router.post("/api/user/signUp", signUp);
+
 router.post("/api/user/signIn", signIn);
 router.get("/api/user/current", verifyToken, getCurrentUser);
 

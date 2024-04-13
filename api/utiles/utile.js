@@ -1,4 +1,5 @@
-import parsePhoneNumber from "libphonenumber-js";
+import pkg from 'google-libphonenumber';
+const { PhoneNumberUtil } = pkg;
 
 // Validate email format
 export const isValidEmail = (email) => {
@@ -10,16 +11,13 @@ export const isValidEmail = (email) => {
 //It allows only India, USA, or Dubai
 export const isValidPhone = (phone) => {
   try {
-    const phoneNumber = parsePhoneNumber(phone);
-    if (
-      phoneNumber &&
-      (phoneNumber.country === "IN" ||
-        phoneNumber.country === "US" ||
-        phoneNumber.country === "AE")
-    ) {
-      return true;
-    } else {
-      return false;
+    const phoneUtil = PhoneNumberUtil.getInstance();
+    
+    const number = phoneUtil.parseAndKeepRawInput(phone, 'IN');
+    const isValid = phoneUtil.isValidNumber(number);
+
+    if(isValid){
+      return true
     }
   } catch (error) {
     return false;

@@ -4,7 +4,9 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../services/authService.js";
-import { isValidEmail, isValidPassword } from "../utiles/utile.js";
+import { isValidEmail, isValidPassword, isValidPhone } from "../utiles/utile.js";
+import createHttpError from "http-errors";
+
 
 //signUpUser
 export async function signUpUser(name, email, password, phone, role = "user") {
@@ -13,22 +15,23 @@ export async function signUpUser(name, email, password, phone, role = "user") {
     const validationErrors = [];
 
     // Validate name
-    if (!name) {
-      validationErrors.push("Name is required");
+    if (!name || !email || !phone || !password) {
+      validationErrors.push("All fields are required");
     }
 
     // Validate email format
-    if (!email || !isValidEmail(email)) {
+    if (email && !isValidEmail(email)) {
       validationErrors.push("Invalid email format");
     }
 
     // Validate phone format
-    if (!phone) {
+    if (!isValidPhone(phone)) {
       validationErrors.push("Invalid phone number format");
     }
 
+
     // Validate password strength
-    if (!password || !isValidPassword(password)) {
+    if (!isValidPassword(password)) {
       validationErrors.push("Password must be at least 8 characters long");
     }
 
@@ -54,16 +57,17 @@ export async function signUpUser(name, email, password, phone, role = "user") {
     }
 
     // Hash the password before storing it
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user with the hashed password
-    const newUser = await userModel.create({
-      name,
-      email,
-      phone,
-      password: hashedPassword,
-      role,
-    });
+      const newUser = await userModel.create({
+        name,
+        email,
+        phone,
+        password: hashedPassword,
+        role,
+      });
 
     // Generate JWT token with the ID of the newly created user
     const token = generateAccessToken(newUser._id, newUser.role);
@@ -79,7 +83,7 @@ export async function signUpUser(name, email, password, phone, role = "user") {
     };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "Internal Server Error" };
+    return { success: false, message: "Internal Server Error from user sign up api" };
   }
 }
 
