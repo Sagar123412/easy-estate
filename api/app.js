@@ -15,13 +15,15 @@ config({ path: "./config.env" });
 export const app = express();
 
 app.use(express.json())
+
+//middlewares
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(globalErrorHandler)
+
 //routes
 app.use(userRoutes);
 app.use('/admin', adminRoutes);
 
 
 
-//middlewares
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(globalErrorHandler)

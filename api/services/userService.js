@@ -39,8 +39,7 @@ export async function signUpUser(name, email, password, phone, role = "user") {
     if (validationErrors.length > 0) {
       return {
         success: false,
-        message: "Invalid input data",
-        errors: validationErrors,
+        message: validationErrors
       };
     }
 
