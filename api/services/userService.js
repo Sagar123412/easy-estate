@@ -5,7 +5,6 @@ import {
   generateRefreshToken,
 } from "../services/authService.js";
 import { isValidEmail, isValidPassword, isValidPhone } from "../utiles/utile.js";
-import createHttpError from "http-errors";
 
 
 //signUpUser

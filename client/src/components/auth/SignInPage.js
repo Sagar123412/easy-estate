@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Typography, TextField, Button, Link, Grid, CircularProgress } from "@mui/material";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Link,
+  Grid,
+  CircularProgress,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signInUser } from "../../actions/authActions";
 
 const SignInPage = () => {
   const dispatch = useDispatch();
-  const navigate =useNavigate();
+  const navigate = useNavigate();
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
   const currentUser = useSelector((state) => state.auth.currentUser);
-  const [formData, setFormData] = useState({ emailOrPhone: '', password: '' });
-  
+  const [formData, setFormData] = useState({ emailOrPhone: "", password: "" });
+
   useEffect(() => {
     if (currentUser !== null) {
+      localStorage.setItem("authToken",currentUser.data.accessToken)
       navigate("/BuyerLandingPageAfterLogin");
     }
-  }, [currentUser,navigate]);
+  }, [currentUser, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,13 +71,22 @@ const SignInPage = () => {
               value={formData.password}
               onChange={handleChange}
             />
-            <Button type="submit" variant="contained" style={{backgroundColor:"#ddb849", padding: '10px 20px',}} fullWidth disabled={loading}>
-              {loading ? <CircularProgress size={24} /> : 'Login'}
+            <Button
+              type="submit"
+              variant="contained"
+              style={{ backgroundColor: "#ddb849", padding: "10px 20px" }}
+              fullWidth
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} /> : "Login"}
             </Button>
           </form>
           {error && <Typography color="error">{error}</Typography>}
           <Typography variant="body1" align="center" mt={2}>
-            Don't have an account? <Link style={{color:"#ddb849"}} href="/signup">Sign Up</Link>
+            Don't have an account?{" "}
+            <Link style={{ color: "#ddb849" }} href="/signup">
+              Sign Up
+            </Link>
           </Typography>
         </Grid>
       </Grid>

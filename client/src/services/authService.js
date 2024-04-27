@@ -24,4 +24,6 @@ export const signIn = async (userData) => {
   }
 };
 
-
+export const signOut = () => {
+  localStorage.clear();
+};

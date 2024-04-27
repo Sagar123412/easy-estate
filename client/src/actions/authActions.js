@@ -1,5 +1,7 @@
+// authActions.js
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { signIn, signUp } from "../services/authService";
+import { signIn, signUp, signOut } from "../services/authService";
 
 // Action creators
 export const signUpUser = createAsyncThunk(
@@ -20,6 +22,17 @@ export const signInUser = createAsyncThunk(
     try {
       const data = await signIn(userData);
       return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const signOutUser = createAsyncThunk(
+  "user/signOut",
+  async (_, { rejectWithValue }) => {
+    try {
+      signOut();
     } catch (error) {
       return rejectWithValue(error.message);
     }

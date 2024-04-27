@@ -28,9 +28,10 @@ const SignUpPage = () => {
 
   useEffect(() => {
     if (currentUser !== null) {
+      localStorage.setItem("authToken",currentUser.data.accessToken)
       navigate("/BuyerLandingPageAfterLogin");
     }
-  }, [currentUser,navigate]);
+  }, [currentUser, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,7 +99,7 @@ const SignUpPage = () => {
             <Button
               type="submit"
               variant="contained"
-              style={{backgroundColor:"#ddb849", padding: '10px 20px',}}
+              style={{ backgroundColor: "#ddb849", padding: "10px 20px" }}
               fullWidth
               disabled={loading}
             >
@@ -111,7 +112,10 @@ const SignUpPage = () => {
             </Typography>
           )}
           <Typography variant="body1" align="center" mt={2}>
-            Already have an account? <Link style={{color:"#ddb849"}} href="/login">Login</Link>
+            Already have an account?{" "}
+            <Link style={{ color: "#ddb849" }} href="/signin">
+              Sign In
+            </Link>
           </Typography>
         </Grid>
       </Grid>
