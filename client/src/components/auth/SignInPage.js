@@ -9,12 +9,13 @@ import {
   Grid,
   CircularProgress,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { signInUser } from "../../actions/authActions";
 
 const SignInPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -22,8 +23,15 @@ const SignInPage = () => {
 
   useEffect(() => {
     if (currentUser !== null) {
-      localStorage.setItem("authToken",currentUser.data.accessToken)
-      navigate("/BuyerLandingPageAfterLogin");
+      localStorage.setItem("authToken", currentUser.data.accessToken);
+      localStorage.setItem("role", currentUser.data.role);
+      const roleMappings = {
+        seller: "/SellerLandingPageAfterLogin",
+        admin: "/AdminLandingPageAfterLogin",
+        user: "/BuyerLandingPageAfterLogin",
+      };
+      const role = currentUser.data.role;
+      navigate(roleMappings[role]);
     }
   }, [currentUser, navigate]);
 
@@ -84,7 +92,14 @@ const SignInPage = () => {
           {error && <Typography color="error">{error}</Typography>}
           <Typography variant="body1" align="center" mt={2}>
             Don't have an account?{" "}
-            <Link style={{ color: "#ddb849" }} href="/signup">
+            <Link
+              style={{ color: "#ddb849" }}
+              href={
+                location.pathname.includes("/seller/")
+                  ? "/seller/signup"
+                  : "/signup"
+              }
+            >
               Sign Up
             </Link>
           </Typography>

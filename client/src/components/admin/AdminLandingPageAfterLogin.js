@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signOutUser } from "../../actions/authActions";
 
-const BuyerLandingPage = () => {
+const AdminLandingPageAfterLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -14,14 +14,16 @@ const BuyerLandingPage = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.heading}>Welcome to Our Real Estate Marketplace</h1>
-      <p style={styles.subheading}>
-        Discover the finest properties curated just for you.
+      <h1 style={styles.heading}>Welcome to Admin Dashboard</h1>
+      <p style={styles.description}>
+        Manage users, settings, and access control efficiently.
       </p>
-      <button style={styles.logoutButton} onClick={handleLogout}>
-        Logout
-      </button>
-      {/* Additional content or features can be added here */}
+      <div style={styles.buttons}>
+        <button style={styles.logoutButton} onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+      {/* Additional content or features for admin dashboard */}
     </div>
   );
 };
@@ -36,9 +38,13 @@ const styles = {
     fontSize: "36px",
     marginBottom: "20px",
   },
-  subheading: {
+  description: {
     fontSize: "18px",
     marginBottom: "30px",
+  },
+  buttons: {
+    display: "flex",
+    justifyContent: "center",
   },
   logoutButton: {
     backgroundColor: "#ddb849",
@@ -51,4 +57,4 @@ const styles = {
   },
 };
 
-export default BuyerLandingPage;
+export default AdminLandingPageAfterLogin;

@@ -1,20 +1,27 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 const BuyerLandingPage = () => {
   const navigate = useNavigate();
+
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
-    if (authToken) {
-      navigate("/BuyerLandingPageAfterLogin");
-    } else {
-      navigate("/");
+    const role = localStorage.getItem("role");
+    if (authToken && role) {
+      const roleMappings = {
+        seller: "/SellerLandingPageAfterLogin",
+        admin: "/AdminLandingPageAfterLogin",
+        user: "/BuyerLandingPageAfterLogin",
+      };
+      navigate(roleMappings[role]);
     }
   }, [navigate]);
+
   return (
     <div style={styles.container}>
-      <h1 style={styles.heading}>Welcome to Buyer LandingPage</h1>
+      <h1 style={styles.heading}>Welcome to Our Real Estate Marketplace</h1>
       <p style={styles.description}>
-        Discover amazing products from our curated collection.
+        Explore our curated collection of properties for sale and rent.
       </p>
       <div style={styles.buttons}>
         <Link to="/signin" style={styles.button}>
@@ -22,6 +29,9 @@ const BuyerLandingPage = () => {
         </Link>
         <Link to="/signup" style={styles.button}>
           Sign Up
+        </Link>
+        <Link to="/seller" style={styles.button}>
+          Become a Seller
         </Link>
       </div>
       <div style={styles.testimonials}>

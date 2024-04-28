@@ -78,6 +78,7 @@ export async function signUpUser(name, email, password, phone, role = "user") {
       message: "User created successfully",
       token,
       refreshToken,
+      role,
     };
   } catch (error) {
     console.error(error);

@@ -9,11 +9,12 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "../../actions/authActions";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -23,13 +24,20 @@ const SignUpPage = () => {
     email: "",
     phone: "",
     password: "",
-    role: "admin",
+    role: location.pathname === "/seller/signup" ? "seller" : "user",
   });
 
   useEffect(() => {
     if (currentUser !== null) {
-      localStorage.setItem("authToken",currentUser.data.accessToken)
-      navigate("/BuyerLandingPageAfterLogin");
+      localStorage.setItem("authToken", currentUser.data.accessToken);
+      localStorage.setItem("role", currentUser.data.role);
+      const roleMappings = {
+        seller: "/SellerLandingPageAfterLogin",
+        admin: "/AdminLandingPageAfterLogin",
+        user: "/BuyerLandingPageAfterLogin",
+      };
+      const role = currentUser.data.role;
+      navigate(roleMappings[role]);
     }
   }, [currentUser, navigate]);
 
@@ -113,7 +121,14 @@ const SignUpPage = () => {
           )}
           <Typography variant="body1" align="center" mt={2}>
             Already have an account?{" "}
-            <Link style={{ color: "#ddb849" }} href="/signin">
+            <Link
+              style={{ color: "#ddb849" }}
+              href={
+                location.pathname.includes("/seller/")
+                  ? "/seller/signin"
+                  : "/signin"
+              }
+            >
               Sign In
             </Link>
           </Typography>
