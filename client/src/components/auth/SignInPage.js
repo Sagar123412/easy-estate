@@ -19,7 +19,11 @@ const SignInPage = () => {
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
   const currentUser = useSelector((state) => state.auth.currentUser);
-  const [formData, setFormData] = useState({ emailOrPhone: "", password: "" });
+  const [formData, setFormData] = useState({
+    emailOrPhone: "",
+    password: "",
+    role: location.pathname === "/seller/signin" ? "seller" : "user",
+  });
 
   useEffect(() => {
     if (currentUser !== null) {
@@ -60,7 +64,7 @@ const SignInPage = () => {
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
-              label="emailOrPhone"
+              label="Email or phone"
               type="text"
               name="emailOrPhone"
               fullWidth

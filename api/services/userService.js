@@ -4,8 +4,11 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../services/authService.js";
-import { isValidEmail, isValidPassword, isValidPhone } from "../utiles/utile.js";
-
+import {
+  isValidEmail,
+  isValidPassword,
+  isValidPhone,
+} from "../utiles/utile.js";
 
 //signUpUser
 export async function signUpUser(name, email, password, phone, role = "user") {
@@ -28,7 +31,6 @@ export async function signUpUser(name, email, password, phone, role = "user") {
       validationErrors.push("Invalid phone number format");
     }
 
-
     // Validate password strength
     if (!isValidPassword(password)) {
       validationErrors.push("Password must be at least 8 characters long");
@@ -38,20 +40,29 @@ export async function signUpUser(name, email, password, phone, role = "user") {
     if (validationErrors.length > 0) {
       return {
         success: false,
-        message: validationErrors
+        message: validationErrors,
       };
     }
 
-    // Check if user already exists
-    const existingUser = await userModel.findOne({
-      $or: [{ email }, { phone }],
+    const existingUserWithSameRole = await userModel.findOne({
+      $or: [
+        { email, role },
+        { phone, role },
+      ],
     });
 
-    if (existingUser) {
-      if (existingUser.email === email) {
-        return { success: false, message: "Email already exists" };
+    if (existingUserWithSameRole) {
+      if (existingUserWithSameRole.email === email) {
+        return {
+          success: false,
+          message: "User with the same email and role already exists",
+        };
+      } else {
+        return {
+          success: false,
+          message: "User with the same phone number and role already exists",
+        };
       }
-      return { success: false, message: "Phone number already exists" };
     }
 
     // Hash the password before storing it
@@ -82,15 +93,21 @@ export async function signUpUser(name, email, password, phone, role = "user") {
     };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "Internal Server Error from user sign up api" };
+    return {
+      success: false,
+      message: "Internal Server Error from user sign up api",
+    };
   }
 }
 
 //signInUser
-export async function signInUser(emailOrPhone, password) {
+export async function signInUser(emailOrPhone, password, role) {
   try {
     const user = await userModel.findOne({
-      $or: [{ email: emailOrPhone }, { phone: emailOrPhone }],
+      $and: [
+        { $or: [{ email: emailOrPhone }, { phone: emailOrPhone }] },
+        { role },
+      ],
     });
 
     if (!user) {
@@ -156,7 +173,7 @@ export const deleteUserByID = async (id) => {
   return deletedUser;
 };
 
-//update user by Id 
+//update user by Id
 export const updateUserByID = async (id, name, role) => {
   try {
     const updatedUser = await userModel.findByIdAndUpdate(

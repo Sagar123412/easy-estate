@@ -5,7 +5,7 @@ import {
   signUpUser,
   getUserByID as getUserByIDService,
   deleteUserByID as deleteUserByIDService,
-  updateUserByID as updateUserByIDService
+  updateUserByID as updateUserByIDService,
 } from "../services/userService.js";
 
 export async function signUp(req, res) {
@@ -24,9 +24,9 @@ export async function signUp(req, res) {
 }
 
 export async function signIn(req, res) {
-  const { emailOrPhone, password } = req.body;
+  const { emailOrPhone, password, role } = req.body;
   try {
-    const result = await signInUser(emailOrPhone, password);
+    const result = await signInUser(emailOrPhone, password, role);
     if (result.success) {
       res.status(200).json(result);
     } else {
@@ -120,17 +120,17 @@ export const deleteUserByID = async (req, res) => {
 export const updateUserByID = async (req, res) => {
   const { id } = req.params;
   const { name, role } = req.body;
-  
+
   try {
     const updatedUser = await updateUserByIDService(id, name, role);
-    
+
     if (!updatedUser) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-    
+
     res.json({
       success: true,
       message: "User updated successfully",
